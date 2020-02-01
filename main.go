@@ -3,6 +3,7 @@ package main
 import (
 	"encoding/csv"
 	"fmt"
+	"html/template"
 	"io"
 	"log"
 	"net/http"
@@ -28,7 +29,9 @@ func readCSVFromURL(url string) ([][]string, error) {
 }
 
 func main() {
-	url := "https://lithos.geo.auth.gr/fdsnws/event/1/query?starttime=2020-01-01T00%3A00%3A00&endtime=2021-01-01T00%3A00%3A00&eventtype=earthquake&includeallmagnitudes=true&format=csv&formatted=true&nodata=404"
+
+	//url := "https://lithos.geo.auth.gr/fdsnws/event/1/query?starttime=2020-01-01T00%3A00%3A00&endtime=2021-01-01T00%3A00%3A00&eventtype=earthquake&includeallmagnitudes=true&format=csv&formatted=true&nodata=404"
+	url := "https://lithos.geo.auth.gr/fdsnws/event/1/query?starttime=2020-01-01T00%3A00%3A00&endtime=2021-01-01T00%3A00%3A00&includeallmagnitudes=true&format=csv&formatted=true&nodata=404"
 	data, err := readCSVFromURL(url)
 	if err != nil {
 		panic(err)
@@ -46,6 +49,7 @@ func main() {
 	log.Println("Earthquakes:")
 	//---------------------------------------------------------------------------
 
+	//------------------
 	for idx, row := range data {
 		// skip header
 		if idx == 0 {
@@ -59,11 +63,49 @@ func main() {
 		timeStamp := parsetime.Format("2006-01-02 15:04:05")
 		//fmt.Println(timeStamp, row[2], row[3], row[4], row[5], row[6])
 		log.Println(timeStamp, " ", row[2], " ", row[3], " ", row[4], " ", row[5], " ", row[6])
+
 		coord := row[2] + "," + row[3]
 		log.Println("https://www.google.gr/maps/@" + coord + ",18z")
 
 		//println("https://www.google.gr/maps/@", row[2], ",", row[3], ",13z")
 	}
+
+	tmpl := template.Must(template.ParseFiles("layout.html"))
+	http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
+
+		for indx, rowdata := range data {
+
+			date := rowdata[1]
+			parsetime, _ := time.Parse(time.RFC3339, date)
+			timeStamp := parsetime.Format("2006-01-02 15:04:05")
+
+			datahtml := PageData{
+				PageTitle: "Earthquake:",
+				Datas: []Data{
+					{DateTime: timeStamp, Longitude: rowdata[2], Latitude: rowdata[3], Depth: rowdata[4], Magnitude: rowdata[5], Where: rowdata[6], Link: "https://www.google.gr/maps/@" + rowdata[2] + "," + rowdata[3] + ",18z"},
+				},
+			}
+			if indx != 0 {
+				tmpl.Execute(w, datahtml)
+			}
+		}
+	})
+	http.ListenAndServe(":8080", nil)
+}
+
+type Data struct {
+	DateTime  string
+	Longitude string
+	Latitude  string
+	Depth     string
+	Magnitude string
+	Where     string
+	Link      string
+}
+
+type PageData struct {
+	PageTitle string
+	Datas     []Data
 }
 
 //url := "https://lithos.geo.auth.gr/fdsnws/event/1/query?starttime=2019-01-01T00%3A00%3A00&endtime=2020-02-01T00%3A00%3A00&eventtype=earthquake&includeallmagnitudes=true&format=csv&formatted=true&nodata=404"

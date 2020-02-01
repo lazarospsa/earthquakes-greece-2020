@@ -1,0 +1,16 @@
+CSV->
+https://lithos.geo.auth.gr/fdsnws/event/1/query?starttime=2000-01-01T00%3A00%3A00&endtime=2020-02-01T00%3A00%3A00&eventtype=earthquake&format=csv&formatted=true&nodata=404
+
+XML->
+https://lithos.geo.auth.gr/fdsnws/event/1/query?starttime=2000-01-01T00%3A00%3A00&endtime=2020-02-01T00%3A00%3A00&eventtype=earthquake&format=sc3ml&formatted=true&nodata=404
+
+TXT->
+https://lithos.geo.auth.gr/fdsnws/event/1/query?starttime=2000-01-01T00%3A00%3A00&endtime=2020-02-01T00%3A00%3A00&eventtype=earthquake&format=text&formatted=true&nodata=404
+
+http://geophysics.geo.auth.gr/the_seisnet/WEBSITE_2005/station_index_en.html
+
+
+https://lithos.geo.auth.gr/fdsnws/event/1/query?starttime=2020-01-01T00%3A00%3A00&endtime=2021-01-01T00%3A00%3A00&includeallmagnitudes=true&format=csv&formatted=true&nodata=404
+
+csv last->
+https://lithos.geo.auth.gr/fdsnws/event/1/query?starttime=2000-01-01T00%3A00%3A00&endtime=2020-02-01T00%3A00%3A00&eventtype=earthquake&includeallmagnitudes=true&format=csv&formatted=true&nodata=404

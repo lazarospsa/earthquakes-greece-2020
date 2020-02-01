@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset='utf-8'>
+    <meta http-equiv='X-UA-Compatible' content='IE=edge'>
+    <title>Σεισμοί Φέτος</title>
+    <meta name='viewport' content='width=device-width, initial-scale=1'>
+    <link rel='stylesheet' type='text/css' media='screen' href='main.css'>
+    <script src='main.js'></script>
+    <style>
+        .center {
+          margin: auto;
+          width: 50%;
+          border: 3px solid rgb(0, 153, 255);
+          padding: 10px;
+        }
+    </style>
+</head>
+<body class="center">
+    
+
+<h1>{{.PageTitle}}</h1>
+<ul>
+    <!--{{range .Datas}}-->
+    <li>Ημερομηνία και ώρα: {{.DateTime}}</li>
+    <li>{{.Longitude}},{{.Latitude}}</li>
+    <li><font size="2" color="blue">Βάθος: {{.Depth}} χιλιόμετρα</font></li>
+    <li><font color="red">Ένταση: {{.Magnitude}}</font></li>
+    <li>Στην τοποθεσία: {{.Where}}</li>
+    <li><a href='{{.Link}}' target="_blank">Δείτε στο χάρτη</a></li>
+    <!--{{end}}-->
+</ul>
+<hr>
+
+
+</body>
+</html>
+<!--
+    <ul>
+    {{range .Datas}}
+        {{if .Done}}
+            <li class="done">{{.Title}}</li>
+        {{else}}
+            <li>{{.Title}}</li>
+        {{end}}
+    {{end}}
+</ul>
+-->
