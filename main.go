@@ -3,7 +3,10 @@ package main
 import (
 	"encoding/csv"
 	"fmt"
+	"io"
+	"log"
 	"net/http"
+	"os"
 	"time"
 )
 
@@ -30,24 +33,35 @@ func main() {
 	if err != nil {
 		panic(err)
 	}
-
 	fmt.Println("Date&Time, Latitude, Longitude, Depth, Magnitude, Description")
+
+	//--------------------------------------------------------------------------
+	f, err := os.OpenFile("earthquakes.log", os.O_RDWR|os.O_CREATE|os.O_APPEND, 0666)
+	if err != nil {
+		log.Fatalf("error opening file: %v", err)
+	}
+	defer f.Close()
+	wrt := io.MultiWriter(os.Stdout, f)
+	log.SetOutput(wrt)
+	log.Println("Earthquakes:")
+	//---------------------------------------------------------------------------
 
 	for idx, row := range data {
 		// skip header
 		if idx == 0 {
 			continue
 		}
-
 		/*if idx == 100 {
 			break
 		}*/
 		date := row[1]
 		parsetime, _ := time.Parse(time.RFC3339, date)
 		timeStamp := parsetime.Format("2006-01-02 15:04:05")
-		fmt.Println(timeStamp, row[2], row[3], row[4], row[5], row[6])
+		//fmt.Println(timeStamp, row[2], row[3], row[4], row[5], row[6])
+		log.Println(timeStamp, " ", row[2], " ", row[3], " ", row[4], " ", row[5], " ", row[6])
 		coord := row[2] + "," + row[3]
-		println("https://www.google.gr/maps/@" + coord + ",18z")
+		log.Println("https://www.google.gr/maps/@" + coord + ",18z")
+
 		//println("https://www.google.gr/maps/@", row[2], ",", row[3], ",13z")
 	}
 }
